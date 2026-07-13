@@ -3,6 +3,7 @@ import { Inter, Geist, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "@/components/providers/query-provider";
 import { cn } from "@/lib/utils";
+import { Sidebar } from "@/components/layout/sidebar"; // <-- Import Sidebar
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 const cormorant = Cormorant_Garamond({
@@ -23,9 +24,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" data-theme="light" className={cn("font-sans", geist.variable)}>
-      <body className={`${geist.variable} ${geist.variable} ${cormorant.variable}`}>
+      <body className={`${geist.variable} ${cormorant.variable}`}>
         <QueryProvider>
-          {children}
+          <div className="flex min-h-screen bg-bg">
+            <Sidebar />
+            <div className="flex-1 overflow-auto">
+              {children}
+            </div>
+          </div>
         </QueryProvider>
       </body>
     </html>
