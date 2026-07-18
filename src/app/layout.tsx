@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Geist, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "@/components/providers/query-provider";
+import { ThemeProvider } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import { Sidebar } from "@/components/layout/sidebar"; // <-- Import Sidebar
 
@@ -23,16 +24,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="light" className={cn("font-sans", geist.variable)}>
+    <html lang="en" suppressHydrationWarning className={cn("font-sans", geist.variable)}>
       <body className={`${geist.variable} ${cormorant.variable}`}>
-        <QueryProvider>
-          <div className="flex min-h-screen bg-bg">
-            <Sidebar />
-            <div className="flex-1 overflow-auto">
-              {children}
+        <ThemeProvider
+            attribute="data-theme"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+        >
+          <QueryProvider>
+            <div className="flex min-h-screen bg-bg">
+              <Sidebar />
+              <div className="flex-1 overflow-auto">
+                {children}
+              </div>
             </div>
-          </div>
-        </QueryProvider>
+          </QueryProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

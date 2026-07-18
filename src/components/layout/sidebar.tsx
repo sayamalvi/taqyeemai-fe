@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LayoutGrid, FileText, BarChart3, Layers, History, Settings, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 const NAV = [
     { to: '/', icon: LayoutGrid, label: 'Dashboard' },
@@ -86,6 +87,12 @@ export function Sidebar() {
 
             <div className="flex flex-col items-center gap-2 w-full px-4">
                 <NavItem to="/settings" icon={Settings} label="Settings" isActive={pathname.startsWith('/settings')} />
+                
+                {/* Theme Toggle Wrapper matching the NavItem styles */}
+                <div className={cn(ROW_BASE, "text-ink-muted hover:bg-surface-2 hover:text-ink w-full overflow-visible")}>
+                    <ThemeToggle isExpanded textClassName={LABEL_BASE} />
+                </div>
+
                 <button title="Log out" className="block w-full text-left">
                     <div className={cn(ROW_BASE, "text-ink-muted hover:bg-surface-2 hover:text-danger")}>
                         <span className="h-11 w-11 flex items-center justify-center shrink-0">
