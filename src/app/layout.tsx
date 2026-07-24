@@ -27,10 +27,10 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning className={cn("font-sans", geist.variable)}>
       <body className={`${geist.variable} ${cormorant.variable}`}>
         <ThemeProvider
-            attribute="data-theme"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
+          attribute="data-theme"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
         >
           <QueryProvider>
             <div className="flex min-h-screen bg-bg">

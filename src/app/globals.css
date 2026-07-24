@@ -4,10 +4,15 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ───────────────────────────────────────────
+   PRECISION DESIGN SYSTEM — "Precision Noir"
+   Pure pitch midnight (#08090E), razor-sharp borders (0.08 opacity),
+   emerald accent (#00F59B), gold metrics (#FBBF24)
+   ─────────────────────────────────────────── */
+
 @theme {
-  --font-sans: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-display: var(--font-display), sans-serif;
-  --font-serif: var(--font-serif), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: var(--font-outfit), sans-serif;
 
   --color-bg: var(--bg);
   --color-surface: var(--surface);
@@ -18,6 +23,7 @@
   --color-accent: var(--accent);
   --color-accent-strong: var(--accent-strong);
   --color-accent-soft: var(--accent-soft);
+  --color-gold: var(--gold);
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-danger: var(--danger);
@@ -26,47 +32,47 @@
   --radius-pill: 999px;
 }
 
+/* ─── Light Mode ─── */
 :root,
 [data-theme="light"] {
-  --bg: #f4f4f0;
-  --surface: #ffffff;
-  --surface-2: #fafaf7;
-  --border: rgba(15, 17, 21, 0.06);
-  --ink: #0f1115;
-  --ink-muted: #6b7280;
-  --accent: #5b7c6a;
-  --accent-strong: #2f4a3a;
-  --accent-soft: #e6efe8;
-  --accent-hero: #2f4a3a;
-  --accent-hero-2: #436354;
-  --success: #4a7a5d;
-  --warning: #c28a3a;
-  --danger: #b5564e;
-  --shadow-card: 0 1px 3px rgba(15, 17, 21, 0.04), 0 1px 2px rgba(15, 17, 21, 0.03);
-  --shadow-hover: 0 6px 20px rgba(15, 17, 21, 0.06);
+  --bg: #F8F9FA;
+  --surface: #FFFFFF;
+  --surface-2: #F1F3F5;
+  --border: rgba(0, 0, 0, 0.08);
+  --ink: #0F172A;
+  --ink-muted: #64748B;
+  --accent: #10B981;
+  --accent-strong: #059669;
+  --accent-soft: rgba(16, 185, 129, 0.08);
+  --gold: #F59E0B;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.06);
 }
 
+/* ─── Dark Mode (Default) ─── */
 [data-theme="dark"] {
-  --bg: #0f1115;
-  --surface: #16181d;
-  --surface-2: #1b1e24;
-  --border: rgba(255, 255, 255, 0.06);
-  --ink: #f2f2ee;
-  --ink-muted: #9aa0a6;
-  --accent: #8fb39c;
-  --accent-strong: #b6cfc0;
-  --accent-soft: rgba(143, 179, 156, 0.12);
-  --accent-hero: #1e3024;
-  --accent-hero-2: #2a4234;
-  --success: #8fb39c;
-  --warning: #d4a86a;
-  --danger: #d4847c;
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
-  --shadow-hover: 0 6px 20px rgba(0, 0, 0, 0.35);
+  --bg: #08090E;
+  --surface: #11131C;
+  --surface-2: #181A26;
+  --border: rgba(255, 255, 255, 0.08);
+  --ink: #F3F4F6;
+  --ink-muted: #8E96A4;
+  --accent: #00F59B;
+  --accent-strong: #10B981;
+  --accent-soft: rgba(0, 245, 155, 0.10);
+  --gold: #FBBF24;
+  --success: #00F59B;
+  --warning: #FBBF24;
+  --danger: #F87171;
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.4);
+  --shadow-hover: 0 10px 30px rgba(0, 0, 0, 0.6);
 }
 
-html,
-body {
+/* ─── Base ─── */
+html, body {
   height: 100%;
 }
 
@@ -82,51 +88,44 @@ body {
   border-color: var(--border);
 }
 
-.shadow-card {
-  box-shadow: var(--shadow-card);
+/* ─── Dot Matrix Grid Background ─── */
+.bg-dot-grid {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
-.shadow-hover {
-  box-shadow: var(--shadow-hover);
-}
+/* ─── Utility Classes ─── */
+.shadow-card { box-shadow: var(--shadow-card); }
+.shadow-hover { box-shadow: var(--shadow-hover); }
 
 .font-display {
   font-family: var(--font-display);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
 }
 
-.font-serif {
-  font-family: var(--font-serif);
+.tabular { font-variant-numeric: tabular-nums; }
+
+/* Gradient text utility */
+.text-gradient-accent {
+  background-image: linear-gradient(135deg, var(--accent) 0%, var(--gold) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
 }
 
-.tabular {
-  font-variant-numeric: tabular-nums;
-}
-
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
+/* Crisp Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.08);
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
 }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
 
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.14);
-}
-
-[data-theme="dark"] ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.14);
-}
-
+/* ─── Shadcn Compatibility Tokens ─── */
 @theme inline {
-  --font-heading: var(--font-sans);
+  --font-heading: var(--font-display);
   --font-sans: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);

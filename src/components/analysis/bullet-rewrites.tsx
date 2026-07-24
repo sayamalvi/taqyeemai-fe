@@ -1,6 +1,5 @@
 import { useState, useMemo } from "react";
 import { ArrowRight, Loader2, Sparkles, Wand2, Info } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
@@ -22,15 +21,8 @@ interface BulletRewritesProps {
 function GradientNumber({ value, size = 32 }: { value: string | number; size?: number }) {
     return (
         <span
-            className="font-display tabular-nums font-semibold leading-none tracking-tight"
-            style={{
-                fontSize: size,
-                backgroundImage: "linear-gradient(135deg, #B6CFC0 0%, var(--accent) 45%, var(--accent-strong) 100%)",
-                WebkitBackgroundClip: "text",
-                backgroundClip: "text",
-                color: "transparent",
-                WebkitTextFillColor: "transparent",
-            }}
+            className="font-display tabular font-extrabold leading-none tracking-tight text-accent"
+            style={{ fontSize: size }}
         >
             {value}
         </span>
@@ -38,7 +30,6 @@ function GradientNumber({ value, size = 32 }: { value: string | number; size?: n
 }
 
 export function BulletRewrites({ rewrites, onApply, isApplying, error }: BulletRewritesProps) {
-    // Use indices as IDs since AI might not return stable IDs
     const ids = useMemo(() => rewrites.map((_, i) => i.toString()), [rewrites]);
     const [selected, setSelected] = useState<Set<string>>(() => new Set(ids));
 
@@ -63,107 +54,78 @@ export function BulletRewrites({ rewrites, onApply, isApplying, error }: BulletR
         onApply?.(selectedRewrites);
     }
 
-    function applyAll() {
-        onApply?.(rewrites);
-    }
-
     if (!rewrites?.length) {
         return (
-            <Card>
-                <CardHeader>
-                    <div>
-                        <CardTitle className="text-base">Suggested Rewrites</CardTitle>
-                        <CardDescription className="mt-1">No rewrites suggested.</CardDescription>
-                    </div>
-                </CardHeader>
-            </Card>
+            <div className="rounded-3xl border border-white/[0.08] bg-surface p-6">
+                <h3 className="font-display text-base font-bold text-ink">Suggested Bullet Rewrites</h3>
+                <p className="text-xs text-ink-muted mt-1">No bullet rewrites recommended for this version.</p>
+            </div>
         );
     }
 
     return (
-        <Card>
-            <CardHeader className="!mb-3">
-                <div>
-                    <CardTitle className="text-base">Suggested Rewrites</CardTitle>
-                    <CardDescription className="mt-1">
-                        Pick the ones you want — applying creates a new version.
-                    </CardDescription>
-                </div>
-            </CardHeader>
-
-            <div
-                className="relative rounded-2xl border border-border p-5 mb-5 overflow-hidden"
-                style={{
-                    background: "linear-gradient(135deg, var(--accent-soft) 0%, var(--surface-2) 70%, var(--surface) 100%)",
-                }}
-            >
-                <svg
-                    className="absolute -top-8 -right-8 pointer-events-none opacity-50"
-                    width="160"
-                    height="160"
-                    viewBox="0 0 160 160"
-                    aria-hidden
-                >
-                    <circle cx="80" cy="80" r="68" fill="none" stroke="var(--accent)" strokeOpacity="0.3" strokeWidth="1" strokeDasharray="3 6" />
-                    <circle cx="80" cy="80" r="48" fill="none" stroke="var(--accent)" strokeOpacity="0.18" strokeWidth="1" />
-                </svg>
-
-                <div className="relative flex items-end justify-between gap-6 flex-wrap">
-                    <div className="flex items-end gap-8">
-                        <div>
-                            <div className="text-[10px] uppercase tracking-wider font-semibold text-ink-muted">AI rewrites</div>
-                            <div className="flex items-baseline gap-1.5 mt-1.5">
-                                <GradientNumber value={rewrites.length} size={44} />
-                                <span className="text-[11px] text-ink-muted ml-1">ready</span>
-                            </div>
+        <div className="space-y-6">
+            {/* Header Banner */}
+            <div className="rounded-3xl border border-white/[0.08] bg-surface p-6 md:p-8 space-y-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div className="space-y-1.5">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-bold uppercase tracking-wider">
+                            <Sparkles size={12} />
+                            <span>AI Bullet Optimization</span>
                         </div>
-                        <div className="h-10 w-px bg-border" />
-                        <div>
-                            <div className="text-[10px] uppercase tracking-wider font-semibold text-ink-muted">Selected</div>
-                            <div className="flex items-baseline gap-1 mt-1.5">
-                                <span className="font-display tabular-nums text-[26px] font-semibold leading-none tracking-tight text-ink">
-                                    {selected.size}
-                                </span>
-                                <span className="text-ink-muted text-sm tabular-nums">/ {rewrites.length}</span>
-                            </div>
-                        </div>
+                        <h3 className="font-display text-2xl font-bold text-ink tracking-tight">High-Impact Bullet Rewrites</h3>
+                        <p className="text-xs text-ink-muted max-w-lg leading-relaxed">
+                            Select the AI bullet rewrites you want to commit. Applying selected rewrites will automatically generate a new version of your resume.
+                        </p>
                     </div>
 
-                    <div className="flex items-center gap-2 flex-wrap">
-                        <Button variant="outline" size="sm" onClick={toggleAll}>
-                            {allSelected ? "Clear all" : "Select all"}
-                        </Button>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={applySelected}
-                            disabled={!someSelected || isApplying}
-                        >
-                            {isApplying ? <Loader2 size={13} className="animate-spin" /> : <Sparkles size={13} />}
-                            Apply selected
-                        </Button>
-                        <div
-                            className="rounded-full p-[1.5px]"
-                            style={{
-                                background: "linear-gradient(135deg, #B6CFC0 0%, var(--accent) 45%, var(--accent-strong) 100%)",
-                            }}
-                        >
+                    {/* Stats & Actions */}
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 border-t md:border-t-0 md:border-l border-white/[0.06] pt-4 md:pt-0 md:pl-6">
+                        <div className="flex items-center gap-6">
+                            <div>
+                                <div className="text-[10px] uppercase tracking-wider font-bold text-ink-muted">Available</div>
+                                <div className="flex items-baseline gap-1 mt-1">
+                                    <GradientNumber value={rewrites.length} size={32} />
+                                    <span className="text-xs text-ink-muted font-medium">bullets</span>
+                                </div>
+                            </div>
+                            <div className="h-8 w-px bg-white/[0.08]" />
+                            <div>
+                                <div className="text-[10px] uppercase tracking-wider font-bold text-ink-muted">Selected</div>
+                                <div className="flex items-baseline gap-1 mt-1">
+                                    <span className="font-display tabular text-2xl font-extrabold text-ink">
+                                        {selected.size}
+                                    </span>
+                                    <span className="text-xs text-ink-muted font-medium">/ {rewrites.length}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex items-center gap-2 flex-wrap">
                             <Button
-                                variant="default"
+                                variant="outline"
                                 size="sm"
-                                onClick={applyAll}
-                                disabled={isApplying}
-                                className="!rounded-full bg-accent-strong hover:bg-accent-strong/90 text-white"
+                                onClick={toggleAll}
+                                className="h-9 px-3 rounded-xl border-white/[0.08] bg-surface-2 hover:bg-surface text-ink text-xs font-semibold"
                             >
-                                <Wand2 size={13} className="mr-1.5" />
-                                Apply all → new version
+                                {allSelected ? "Deselect All" : "Select All"}
+                            </Button>
+                            <Button
+                                size="sm"
+                                onClick={applySelected}
+                                disabled={!someSelected || isApplying}
+                                className="h-9 px-4 rounded-xl bg-accent hover:bg-accent-strong text-bg font-semibold text-xs transition-colors duration-200"
+                            >
+                                {isApplying ? <Loader2 size={14} className="animate-spin mr-1.5" /> : <Sparkles size={14} className="mr-1.5" />}
+                                Apply Selected ({selected.size})
                             </Button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div className="space-y-3">
+            {/* List of Rewrites */}
+            <div className="space-y-4">
                 {rewrites.map((r, i) => {
                     const id = i.toString();
                     const isSelected = selected.has(id);
@@ -171,82 +133,86 @@ export function BulletRewrites({ rewrites, onApply, isApplying, error }: BulletR
                         <div
                             key={id}
                             className={cn(
-                                "group relative rounded-2xl border p-5 transition-all",
+                                "relative rounded-3xl border p-6 transition-colors duration-200 overflow-hidden",
                                 isSelected
-                                    ? "border-accent/45 bg-accent-soft/35 shadow-sm"
-                                    : "border-border bg-surface hover:bg-surface-2/60"
+                                    ? "border-accent/40 bg-surface"
+                                    : "border-white/[0.06] bg-surface/60 hover:bg-surface"
                             )}
                         >
+                            {isSelected && (
+                                <div className="absolute top-0 left-0 bottom-0 w-1 bg-accent rounded-r-full" />
+                            )}
+
+                            {/* Card Header */}
                             <div className="flex items-center justify-between mb-4">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-9 flex items-center justify-center">
-                                        <GradientNumber value={String(i + 1).padStart(2, "0")} size={22} />
+                                    <div className="h-7 w-7 rounded-lg bg-surface-2 border border-white/[0.08] flex items-center justify-center text-xs font-bold text-accent">
+                                        {String(i + 1).padStart(2, "0")}
                                     </div>
                                     {r.section && (
-                                        <span className="inline-flex items-center h-6 px-2.5 rounded-full bg-accent-soft text-accent-strong text-[11px] font-semibold capitalize">
+                                        <span className="px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-bold uppercase tracking-wider">
                                             {r.section}
                                         </span>
                                     )}
                                 </div>
-                                <label className="flex items-center gap-2 cursor-pointer select-none">
-                                    <span
-                                        className={cn(
-                                            "text-[11px] font-medium transition-colors",
-                                            isSelected ? "text-accent-strong" : "text-ink-muted"
-                                        )}
-                                    >
-                                        {isSelected ? "Will apply" : "Skip"}
+
+                                <label className="flex items-center gap-2.5 cursor-pointer select-none">
+                                    <span className={cn(
+                                        "text-xs font-semibold transition-colors",
+                                        isSelected ? "text-accent" : "text-ink-muted"
+                                    )}>
+                                        {isSelected ? "Will Apply" : "Skip Bullet"}
                                     </span>
-                                    <Checkbox checked={isSelected} onCheckedChange={() => toggle(id)} />
+                                    <Checkbox
+                                        checked={isSelected}
+                                        onCheckedChange={() => toggle(id)}
+                                        className="h-5 w-5 rounded-md border-white/20 data-[state=checked]:bg-accent data-[state=checked]:border-accent"
+                                    />
                                 </label>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-[1fr_36px_1fr] gap-3 items-stretch">
-                                <div className="relative rounded-xl bg-surface-2/70 p-4 border border-border">
-                                    <div className="flex items-center gap-1.5 mb-1.5">
-                                        <span className="h-1.5 w-1.5 rounded-full bg-ink-muted/50" />
-                                        <div className="text-[10px] uppercase tracking-wider font-semibold text-ink-muted">Original</div>
+                            {/* Side-by-side comparison */}
+                            <div className="grid grid-cols-1 md:grid-cols-[1fr_36px_1fr] gap-4 items-center">
+                                {/* Original Bullet */}
+                                <div className="rounded-2xl bg-surface-2 p-4 border border-white/[0.06] space-y-1.5">
+                                    <div className="flex items-center gap-2">
+                                        <span className="h-1.5 w-1.5 rounded-full bg-danger" />
+                                        <span className="text-[10px] uppercase font-bold tracking-wider text-ink-muted">Original Bullet</span>
                                     </div>
-                                    <div className="text-[13.5px] text-ink-muted leading-relaxed line-through decoration-ink-muted/30">
+                                    <p className="text-xs text-ink-muted leading-relaxed line-through opacity-75">
                                         {r.original}
+                                    </p>
+                                </div>
+
+                                {/* Arrow Icon */}
+                                <div className="flex items-center justify-center py-1 md:py-0">
+                                    <div className="h-8 w-8 rounded-xl bg-surface-2 border border-white/[0.06] text-accent flex items-center justify-center shrink-0">
+                                        <ArrowRight size={15} />
                                     </div>
                                 </div>
 
-                                <div className="flex items-center justify-center py-2 md:py-0">
-                                    <div
-                                        className="h-9 w-9 rounded-full flex items-center justify-center text-white shadow-sm"
-                                        style={{ background: "linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%)" }}
-                                    >
-                                        <ArrowRight size={14} strokeWidth={2.5} />
+                                {/* Rewritten Bullet */}
+                                <div className="rounded-2xl bg-accent/10 p-4 border border-accent/30 space-y-1.5">
+                                    <div className="flex items-center gap-1.5 text-accent">
+                                        <Sparkles size={12} />
+                                        <span className="text-[10px] uppercase font-bold tracking-wider">Optimized Bullet</span>
                                     </div>
-                                </div>
-
-                                <div
-                                    className="relative rounded-xl p-4 border"
-                                    style={{
-                                        background: "linear-gradient(135deg, var(--accent-soft) 0%, var(--surface) 100%)",
-                                        borderColor: "color-mix(in srgb, var(--accent) 30%, transparent)",
-                                    }}
-                                >
-                                    <div className="flex items-center gap-1.5 mb-1.5">
-                                        <Sparkles size={10} strokeWidth={2.5} className="text-accent-strong" />
-                                        <div className="text-[10px] uppercase tracking-wider font-semibold text-accent-strong">Rewritten</div>
-                                    </div>
-                                    <div className="text-[13.5px] text-ink leading-relaxed font-medium">
+                                    <p className="text-xs text-ink font-semibold leading-relaxed">
                                         {r.rewritten}
-                                    </div>
+                                    </p>
                                 </div>
                             </div>
 
+                            {/* Rationale / Why it works */}
                             {r.rationale && (
-                                <div className="mt-4 flex items-start gap-2 rounded-xl bg-surface-2/60 border border-border px-3 py-2.5">
-                                    <span className="h-5 w-5 rounded-md bg-accent-soft text-accent-strong flex items-center justify-center shrink-0 mt-0.5">
-                                        <Info size={10} strokeWidth={2.5} />
-                                    </span>
-                                    <div className="text-[12px] text-ink-muted leading-relaxed">
-                                        <span className="font-semibold text-ink">Why this works · </span>
-                                        {r.rationale}
+                                <div className="mt-4 flex items-start gap-2.5 rounded-2xl bg-surface-2 border border-white/[0.06] p-3.5">
+                                    <div className="h-5 w-5 rounded-lg bg-gold/15 text-gold flex items-center justify-center shrink-0 mt-0.5">
+                                        <Info size={12} />
                                     </div>
+                                    <p className="text-xs text-ink-muted leading-relaxed">
+                                        <span className="font-semibold text-ink">Impact Rationale: </span>
+                                        {r.rationale}
+                                    </p>
                                 </div>
                             )}
                         </div>
@@ -255,10 +221,10 @@ export function BulletRewrites({ rewrites, onApply, isApplying, error }: BulletR
             </div>
 
             {error && (
-                <div className="mt-4 text-xs text-danger bg-red-50 rounded-xl px-3 py-2">
+                <div className="text-xs text-danger bg-danger/10 border border-danger/20 rounded-2xl px-4 py-3 text-center font-medium">
                     {error}
                 </div>
             )}
-        </Card>
+        </div>
     );
 }

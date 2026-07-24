@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { motion, AnimatePresence } from 'framer-motion';
-import { UploadCloud, FileText, X, Loader2 } from 'lucide-react';
+import { UploadCloud, FileText, X, Loader2, Sparkles, CheckCircle2 } from 'lucide-react';
 import { useUploadResume } from '@/hooks/useUploadResume';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
@@ -45,7 +45,6 @@ export function UploadDropzone({ onUploaded }: { onUploaded?: (data: any) => voi
                 targetRole,
                 targetJobDescription,
             });
-            // Reset form
             setFile(null);
             setTitle('');
             setTargetRole('');
@@ -58,54 +57,58 @@ export function UploadDropzone({ onUploaded }: { onUploaded?: (data: any) => voi
     }
 
     return (
-        <div className="space-y-4 max-w-xl mx-auto p-6 bg-surface rounded-3xl border border-border shadow-card hover:shadow-hover transition-all duration-300">
-            <h2 className="font-display text-xl font-bold text-accent-strong">Upload Resume</h2>
-            <p className="text-sm text-ink-muted">PDF format only. We extract details and run an ATS analysis.</p>
+        <div className="bg-surface rounded-3xl border border-white/[0.08] p-6 shadow-card space-y-5">
+            <div>
+                <div className="flex items-center gap-2">
+                    <span className="h-2 w-2 rounded-full bg-accent" />
+                    <h2 className="font-display text-base font-bold text-ink tracking-tight">Upload Resume</h2>
+                </div>
+                <p className="text-xs text-ink-muted mt-1 leading-relaxed">PDF format only. Extracts text, parses sections, and executes ATS scoring.</p>
+            </div>
 
             {!file && (
                 <div
                     {...getRootProps()}
                     className={cn(
-                        'rounded-2xl border border-dashed cursor-pointer p-8 transition-all duration-200 outline-none flex flex-col items-center justify-center text-center',
-                        isDragActive
-                            ? 'border-accent bg-accent-soft'
-                            : 'border-border bg-surface-2 hover:border-accent/40 hover:bg-accent-soft/40',
+                        'rounded-2xl border border-dashed border-white/10 bg-surface-2 cursor-pointer p-8 transition-all duration-200 outline-none flex flex-col items-center justify-center text-center hover:border-accent/40',
+                        isDragActive && 'border-accent bg-accent/10',
                         isDragReject && 'border-danger bg-danger/10'
                     )}
                 >
                     <input {...getInputProps()} />
-                    <motion.div
-                        animate={isDragActive ? { y: -4 } : { y: 0 }}
-                        className={cn(
-                            'h-12 w-12 rounded-xl flex items-center justify-center mb-3',
-                            isDragActive ? 'bg-accent text-white' : 'bg-accent-soft text-accent-strong'
-                        )}
-                    >
-                        <UploadCloud size={20} />
-                    </motion.div>
-                    <div className="font-display font-semibold tracking-tight text-sm">
-                        {isDragActive ? 'Drop it here' : 'Drop your resume PDF'}
+
+                    <div className="h-12 w-12 rounded-2xl bg-surface border border-white/[0.08] text-accent flex items-center justify-center mb-3">
+                        <UploadCloud size={22} />
                     </div>
-                    <div className="text-xs text-ink-muted mt-1">or click to browse · PDF only (max 5 MB)</div>
+
+                    <div className="font-display font-semibold tracking-tight text-xs text-ink">
+                        {isDragActive ? 'Drop file to analyze' : 'Drag & drop your resume PDF'}
+                    </div>
+                    <div className="text-[11px] text-ink-muted mt-1 font-medium">
+                        or <span className="text-accent font-semibold underline underline-offset-2">browse files</span> (max 5 MB)
+                    </div>
                 </div>
             )}
 
             {file && (
                 <motion.div
-                    initial={{ opacity: 0, y: 10 }}
+                    initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="rounded-2xl border border-border bg-surface p-4 flex items-center gap-3"
+                    className="rounded-2xl border border-accent/30 bg-accent/5 p-4 flex items-center gap-3"
                 >
-                    <div className="h-10 w-10 rounded-xl bg-accent-soft flex items-center justify-center text-accent-strong">
+                    <div className="h-10 w-10 rounded-xl bg-accent/15 border border-accent/30 flex items-center justify-center text-accent shrink-0">
                         <FileText size={18} />
                     </div>
                     <div className="flex-1 min-w-0">
-                        <div className="text-sm font-medium truncate">{file.name}</div>
-                        <div className="text-xs text-ink-muted">{(file.size / 1024 / 1024).toFixed(2)} MB</div>
+                        <div className="text-xs font-semibold text-ink truncate">{file.name}</div>
+                        <div className="text-[10px] text-accent flex items-center gap-1 mt-0.5 font-medium">
+                            <CheckCircle2 size={12} />
+                            Ready · {(file.size / 1024 / 1024).toFixed(2)} MB
+                        </div>
                     </div>
                     <button
                         onClick={() => setFile(null)}
-                        className="h-8 w-8 rounded-full hover:bg-surface-2 flex items-center justify-center text-ink-muted"
+                        className="h-7 w-7 rounded-lg hover:bg-white/10 flex items-center justify-center text-ink-muted hover:text-ink transition-colors"
                         disabled={upload.isPending}
                     >
                         <X size={14} />
@@ -119,36 +122,53 @@ export function UploadDropzone({ onUploaded }: { onUploaded?: (data: any) => voi
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="space-y-3 overflow-hidden"
+                        className="space-y-3 overflow-hidden pt-1"
                     >
-                        <Input
-                            placeholder="Resume Title (e.g. Software Engineer Resume)"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                        />
-                        <Input
-                            placeholder="Target Role (optional, e.g. Frontend Engineer)"
-                            value={targetRole}
-                            onChange={(e) => setTargetRole(e.target.value)}
-                        />
-                        <textarea
-                            className="w-full min-h-[100px] text-sm p-3 bg-surface border border-border rounded-xl focus:outline-none focus:ring-1 focus:ring-accent resize-none placeholder-ink-muted/50"
-                            placeholder="Target Job Description (optional, copy/paste JD here for precise keyword scoring)"
-                            value={targetJobDescription}
-                            onChange={(e) => setTargetJobDescription(e.target.value)}
-                        />
+                        <div className="space-y-1">
+                            <label className="text-[10px] font-semibold text-ink-muted uppercase tracking-wider pl-0.5">Resume Title</label>
+                            <Input
+                                placeholder="Resume Title (e.g. Senior Frontend Engineer)"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                className="bg-surface-2 border-white/[0.08] focus:border-accent text-ink h-10 rounded-xl text-xs"
+                            />
+                        </div>
+
+                        <div className="space-y-1">
+                            <label className="text-[10px] font-semibold text-ink-muted uppercase tracking-wider pl-0.5">Target Role <span className="text-ink-muted/50 font-normal">(Optional)</span></label>
+                            <Input
+                                placeholder="e.g. Lead Fullstack Engineer"
+                                value={targetRole}
+                                onChange={(e) => setTargetRole(e.target.value)}
+                                className="bg-surface-2 border-white/[0.08] focus:border-accent text-ink h-10 rounded-xl text-xs"
+                            />
+                        </div>
+
+                        <div className="space-y-1">
+                            <label className="text-[10px] font-semibold text-ink-muted uppercase tracking-wider pl-0.5">Job Description <span className="text-ink-muted/50 font-normal">(Optional for ATS match)</span></label>
+                            <textarea
+                                className="w-full min-h-[85px] text-xs p-3 bg-surface-2 border border-white/[0.08] rounded-xl focus:outline-none focus:border-accent text-ink resize-none placeholder:text-ink-muted/40 font-sans"
+                                placeholder="Paste job description text here to get custom keyword gap analysis..."
+                                value={targetJobDescription}
+                                onChange={(e) => setTargetJobDescription(e.target.value)}
+                            />
+                        </div>
+
                         <Button
                             onClick={submit}
                             disabled={upload.isPending}
-                            className="w-full bg-accent hover:bg-accent-strong text-white"
+                            className="w-full h-11 bg-accent hover:bg-accent-strong text-bg font-semibold rounded-xl transition-colors duration-200 mt-2 text-xs"
                         >
                             {upload.isPending ? (
-                                <>
-                                    <Loader2 size={14} className="animate-spin mr-2" />
-                                    Analyzing with AI...
-                                </>
+                                <span className="flex items-center justify-center gap-2">
+                                    <Loader2 size={16} className="animate-spin" />
+                                    <span>Analyzing PDF...</span>
+                                </span>
                             ) : (
-                                'Upload & Evaluate'
+                                <span className="flex items-center justify-center gap-2">
+                                    <Sparkles size={14} />
+                                    <span>Upload & Evaluate</span>
+                                </span>
                             )}
                         </Button>
                     </motion.div>
@@ -156,7 +176,7 @@ export function UploadDropzone({ onUploaded }: { onUploaded?: (data: any) => voi
             </AnimatePresence>
 
             {err && (
-                <div className="text-xs text-danger bg-danger/10 border border-danger/20 rounded-xl px-3 py-2">
+                <div className="text-xs text-danger bg-danger/10 border border-danger/20 rounded-xl px-3 py-2 text-center font-medium">
                     {err}
                 </div>
             )}
