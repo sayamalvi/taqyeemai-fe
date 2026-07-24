@@ -32,22 +32,33 @@ export function ScoreRing({
     const gradId = `score-ring-grad-${color}-${Math.random().toString(36).substr(2, 4)}`;
 
     return (
-        <div className={cn("flex flex-col items-center gap-2.5", className)}>
-            <div className="relative" style={{ width: size, height: size }}>
-                <svg width={size} height={size} className="-rotate-90">
+        <div className={cn("flex flex-col items-center gap-4", className)}>
+            <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
+                <svg width={size} height={size} className="-rotate-90 overflow-visible">
                     <defs>
                         {color === 'accent' ? (
                             <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stopColor="#00F59B" />
-                                <stop offset="100%" stopColor="#10B981" />
+                                <stop offset="0%" stopColor="#34D399" />
+                                <stop offset="100%" stopColor="#059669" />
                             </linearGradient>
                         ) : (
                             <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stopColor="#FBBF24" />
-                                <stop offset="100%" stopColor="#F59E0B" />
+                                <stop offset="0%" stopColor="#FDE047" />
+                                <stop offset="100%" stopColor="#D97706" />
                             </linearGradient>
                         )}
                     </defs>
+
+                    {/* Ambient Glow / Drop Shadow underneath */}
+                    <circle
+                        cx={size / 2}
+                        cy={size / 2}
+                        r={radius}
+                        fill="none"
+                        stroke={`url(#${gradId})`}
+                        strokeWidth={strokeWidth}
+                        className="opacity-20 blur-md"
+                    />
 
                     {/* Crisp Track */}
                     <circle
@@ -55,11 +66,11 @@ export function ScoreRing({
                         cy={size / 2}
                         r={radius}
                         fill="none"
-                        stroke="rgba(255, 255, 255, 0.08)"
+                        stroke="rgba(255, 255, 255, 0.05)"
                         strokeWidth={strokeWidth}
                     />
 
-                    {/* Vector Gradient Progress Stroke (NO DROP-SHADOW BUG) */}
+                    {/* Vector Gradient Progress Stroke */}
                     <motion.circle
                         cx={size / 2}
                         cy={size / 2}
@@ -71,7 +82,7 @@ export function ScoreRing({
                         strokeDasharray={circumference}
                         initial={{ strokeDashoffset: circumference }}
                         animate={{ strokeDashoffset: dashOffset }}
-                        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
                     />
                 </svg>
 
@@ -79,8 +90,8 @@ export function ScoreRing({
                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                     <motion.span
                         className={cn(
-                            "font-display tabular text-2xl font-extrabold tracking-tight",
-                            color === 'accent' ? "text-[#00F59B]" : "text-[#FBBF24]"
+                            "font-display text-4xl font-semibold tracking-tighter",
+                            color === 'accent' ? "text-[#10B981]" : "text-[#D4AF37]"
                         )}
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -89,7 +100,7 @@ export function ScoreRing({
                         {value}
                     </motion.span>
                     {sublabel && (
-                        <span className="text-[10px] text-ink-muted/80 font-medium">
+                        <span className="text-[11px] font-sans text-foreground/40 font-medium">
                             {sublabel}
                         </span>
                     )}
@@ -97,7 +108,7 @@ export function ScoreRing({
             </div>
 
             <div className="text-center">
-                <div className="text-[11px] font-semibold uppercase tracking-wider text-ink-muted">{label}</div>
+                <div className="text-[11px] font-sans font-semibold tracking-wide text-foreground/60">{label}</div>
             </div>
         </div>
     );

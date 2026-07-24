@@ -33,65 +33,65 @@ export default function LoginPage() {
     };
 
     return (
-        <FadeIn delay={0.05}>
-            <div className="bg-surface rounded-3xl border border-white/[0.08] p-8 sm:p-10 shadow-card space-y-6">
-                <div className="space-y-1.5">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-accent">Authentication</span>
-                    <h2 className="font-display text-2xl font-bold text-ink tracking-tight">Sign In</h2>
-                    <p className="text-xs text-ink-muted leading-relaxed">Enter your credentials to access your resume roster.</p>
+        <FadeIn delay={0.1}>
+            <div className="glass-panel p-8 sm:p-10 rounded-3xl space-y-8">
+                
+                <div className="space-y-2">
+                    <h2 className="font-display text-3xl font-bold text-foreground tracking-tight">Welcome back</h2>
+                    <p className="text-sm font-sans text-foreground/60">Enter your credentials to access your roster.</p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-5">
                     {error && (
-                        <div className="text-xs text-danger bg-danger/10 border border-danger/20 rounded-xl px-3.5 py-2.5 text-center font-medium">
+                        <div className="text-xs text-[#EF4444] bg-[#EF4444]/10 border border-[#EF4444]/20 px-4 py-3 rounded-xl font-medium">
                             {error}
                         </div>
                     )}
 
                     <div className="space-y-1.5">
-                        <label className="text-[11px] font-semibold uppercase tracking-wider text-ink-muted pl-0.5">Email Address</label>
+                        <label className="text-xs font-sans font-semibold text-foreground/80 pl-1">Email Address</label>
                         <Input
                             type="email"
                             required
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="you@example.com"
-                            className="h-11 rounded-xl bg-surface-2 border-white/[0.08] focus:border-accent text-ink placeholder:text-ink-muted/40 text-xs"
+                            className="h-12 rounded-xl bg-black/40 border-white/10 focus:border-primary focus:ring-1 focus:ring-primary/50 text-foreground placeholder:text-foreground/30 text-sm transition-all"
                         />
                     </div>
 
                     <div className="space-y-1.5">
-                        <label className="text-[11px] font-semibold uppercase tracking-wider text-ink-muted pl-0.5">Password</label>
+                        <label className="text-xs font-sans font-semibold text-foreground/80 pl-1">Password</label>
                         <Input
                             type="password"
                             required
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="••••••••"
-                            className="h-11 rounded-xl bg-surface-2 border-white/[0.08] focus:border-accent text-ink placeholder:text-ink-muted/40 text-xs"
+                            className="h-12 rounded-xl bg-black/40 border-white/10 focus:border-primary focus:ring-1 focus:ring-primary/50 text-foreground placeholder:text-foreground/30 text-sm transition-all"
                         />
                     </div>
 
                     <Button
                         type="submit"
                         disabled={loading}
-                        className="w-full h-11 rounded-xl bg-accent hover:bg-accent-strong text-bg font-semibold text-xs transition-colors duration-200 mt-2"
+                        className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 text-white font-sans font-semibold text-base transition-all premium-glow mt-4"
                     >
                         {loading ? (
-                            <Loader2 size={16} className="animate-spin" />
+                            <Loader2 size={18} className="animate-spin" />
                         ) : (
                             <span className="flex items-center justify-center gap-2">
-                                <span>Sign In to Dashboard</span>
-                                <ArrowRight size={14} />
+                                <span>Sign In</span>
+                                <ArrowRight size={16} />
                             </span>
                         )}
                     </Button>
                 </form>
 
-                <div className="pt-3 text-center text-xs text-ink-muted border-t border-white/[0.06]">
-                    Don&apos;t have an account?{' '}
-                    <Link href="/register" className="text-accent hover:underline font-bold">
-                        Create Account
+                <div className="pt-6 font-sans text-sm text-foreground/50 border-t border-white/10 flex justify-center gap-2 items-center">
+                    <span>Don't have an account?</span>
+                    <Link href="/register" className="text-primary font-medium hover:text-white transition-colors">
+                        Sign up
                     </Link>
                 </div>
             </div>

@@ -5,7 +5,7 @@ import { UploadDropzone } from '@/components/resume/UploadDropzone';
 import { useAllResumes } from '@/hooks/useResumeVersions';
 import { FileText, Layers, ChevronRight, Loader2, Trash2, Sparkles, PlusCircle, Activity, Award, TrendingUp } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { api } from '../../../api';
+import { api } from '../../../../api';
 import { FadeIn } from '@/components/ui/animations/fade-in';
 
 export default function ResumesDashboard() {
@@ -41,31 +41,31 @@ export default function ResumesDashboard() {
     const avgScore = scores.length > 0 ? Math.round(scores.reduce((a: number, b: number) => a + b, 0) / scores.length) : null;
 
     return (
-        <main className="p-4 sm:p-6 md:p-10 max-w-7xl mx-auto space-y-8 bg-bg">
+        <main className="p-4 sm:p-6 md:p-10 max-w-7xl mx-auto space-y-8 min-h-screen text-foreground">
 
             {/* ─── BENTO GRID LAYOUT ─── */}
             <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
 
                 {/* BENTO CARD 1: Hero Banner (Col 12) */}
                 <FadeIn delay={0.05} className="md:col-span-12">
-                    <div className="rounded-3xl bg-surface border border-white/[0.08] p-8 md:p-10 shadow-card">
+                    <div className="rounded-3xl glass-panel p-8 md:p-10">
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                             <div className="space-y-2 max-w-2xl">
-                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-bold uppercase tracking-wider">
+                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-wider">
                                     <Sparkles size={12} />
-                                    <span>AI Resume Command Center</span>
+                                    <span>Premium Audit Workspace</span>
                                 </div>
-                                <h1 className="font-display text-3xl md:text-4xl font-extrabold text-ink tracking-tight">
-                                    Resume Roster & <span className="text-gradient-accent">Audit Insights</span>
+                                <h1 className="font-display text-3xl md:text-4xl font-semibold tracking-tight text-foreground">
+                                    Resume Roster & <span className="text-primary italic font-light">Insights</span>
                                 </h1>
-                                <p className="text-xs md:text-sm text-ink-muted leading-relaxed">
-                                    Upload your resumes, track version iterations, and inspect real-time ATS rubrics calibrated against FAANG & top startup benchmarks.
+                                <p className="text-sm font-sans text-foreground/60 leading-relaxed font-light">
+                                    Upload your resumes, track version iterations, and inspect real-time ATS rubrics calibrated against top-tier FAANG benchmarks.
                                 </p>
                             </div>
 
-                            <div className="hidden lg:flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-surface-2 border border-white/[0.06]">
-                                <Activity size={16} className="text-accent" />
-                                <span className="text-xs font-semibold text-ink">Engine Active</span>
+                            <div className="hidden lg:flex items-center gap-2.5 px-4 py-2 rounded-2xl bg-white/5 border border-white/10">
+                                <Activity size={16} className="text-primary" />
+                                <span className="text-xs font-sans font-semibold text-foreground/80">Engine Active</span>
                             </div>
                         </div>
                     </div>
@@ -73,17 +73,17 @@ export default function ResumesDashboard() {
 
                 {/* BENTO CARD 2: Total Resumes Stat (Col 4) */}
                 <FadeIn delay={0.1} className="md:col-span-4">
-                    <div className="h-full rounded-3xl bg-surface border border-white/[0.08] p-6 shadow-card flex flex-col justify-between space-y-4 hover:bg-surface-2 transition-colors duration-200">
+                    <div className="h-full rounded-3xl glass-panel p-6 flex flex-col justify-between space-y-4 hover:bg-white/5 transition-colors duration-300">
                         <div className="flex items-center justify-between">
-                            <span className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">Total Resumes</span>
-                            <div className="h-10 w-10 rounded-2xl bg-surface-2 border border-white/[0.06] text-accent flex items-center justify-center">
+                            <span className="text-[11px] font-sans font-semibold uppercase tracking-widest text-foreground/50">Total Resumes</span>
+                            <div className="h-10 w-10 rounded-2xl bg-white/5 border border-white/10 text-primary flex items-center justify-center">
                                 <FileText size={18} />
                             </div>
                         </div>
                         <div>
-                            <div className="font-display tabular text-4xl font-extrabold text-ink">{totalResumes}</div>
-                            <div className="text-xs text-ink-muted mt-1 flex items-center gap-1.5 font-medium">
-                                <Layers size={13} className="text-accent" />
+                            <div className="font-display tabular text-4xl font-bold text-foreground">{totalResumes}</div>
+                            <div className="text-xs text-foreground/50 font-sans mt-1 flex items-center gap-1.5 font-medium">
+                                <Layers size={13} className="text-primary" />
                                 <span>{totalVersions} total versions generated</span>
                             </div>
                         </div>
@@ -92,19 +92,19 @@ export default function ResumesDashboard() {
 
                 {/* BENTO CARD 3: Average ATS Score Stat (Col 4) */}
                 <FadeIn delay={0.15} className="md:col-span-4">
-                    <div className="h-full rounded-3xl bg-surface border border-white/[0.08] p-6 shadow-card flex flex-col justify-between space-y-4 hover:bg-surface-2 transition-colors duration-200">
+                    <div className="h-full rounded-3xl glass-panel p-6 flex flex-col justify-between space-y-4 hover:bg-white/5 transition-colors duration-300">
                         <div className="flex items-center justify-between">
-                            <span className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">Average ATS Score</span>
-                            <div className="h-10 w-10 rounded-2xl bg-surface-2 border border-white/[0.06] text-gold flex items-center justify-center">
+                            <span className="text-[11px] font-sans font-semibold uppercase tracking-widest text-foreground/50">Avg Match Rate</span>
+                            <div className="h-10 w-10 rounded-2xl bg-white/5 border border-white/10 text-[#D4AF37] flex items-center justify-center">
                                 <Award size={18} />
                             </div>
                         </div>
                         <div>
-                            <div className="font-display tabular text-4xl font-extrabold text-gold">
-                                {avgScore !== null ? `${avgScore}/100` : '—'}
+                            <div className="font-display tabular text-4xl font-bold text-[#D4AF37]">
+                                {avgScore !== null ? `${avgScore}%` : '—'}
                             </div>
-                            <div className="text-xs text-ink-muted mt-1 flex items-center gap-1.5 font-medium">
-                                <TrendingUp size={13} className="text-gold" />
+                            <div className="text-xs text-foreground/50 font-sans mt-1 flex items-center gap-1.5 font-medium">
+                                <TrendingUp size={13} className="text-[#D4AF37]" />
                                 <span>{scores.length > 0 ? 'Across audited resumes' : 'Upload a resume to score'}</span>
                             </div>
                         </div>
@@ -118,34 +118,34 @@ export default function ResumesDashboard() {
 
                 {/* BENTO CARD 5: Resumes Roster List (Col 12) */}
                 <FadeIn delay={0.25} className="md:col-span-12">
-                    <div className="rounded-3xl bg-surface border border-white/[0.08] p-6 md:p-8 shadow-card space-y-6">
-                        <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
+                    <div className="rounded-3xl glass-panel p-6 md:p-8 space-y-6">
+                        <div className="flex items-center justify-between border-b border-white/10 pb-4">
                             <div>
-                                <h2 className="font-display text-xl font-bold text-ink tracking-tight">Your Resume Roster</h2>
-                                <p className="text-xs text-ink-muted mt-0.5">Click any resume to view versions, scores, and AI bullet rewrites</p>
+                                <h2 className="font-display text-xl font-bold tracking-tight text-foreground">Your Active Roster</h2>
+                                <p className="text-xs font-sans text-foreground/50 mt-0.5">Click any resume to view detailed metrics and AI rewrite suggestions.</p>
                             </div>
                             {totalResumes > 0 && (
-                                <span className="px-3 py-1 rounded-full bg-surface-2 border border-white/[0.06] text-xs font-semibold text-accent">
+                                <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-sans font-semibold text-primary">
                                     {totalResumes} Active
                                 </span>
                             )}
                         </div>
 
                         {isLoading && (
-                            <div className="flex flex-col items-center justify-center py-20 bg-surface-2 rounded-2xl border border-white/[0.06]">
-                                <Loader2 size={28} className="animate-spin text-accent mb-3" />
-                                <p className="text-xs font-medium text-ink-muted">Loading your resume roster...</p>
+                            <div className="flex flex-col items-center justify-center py-20 rounded-2xl bg-white/5 border border-white/10">
+                                <Loader2 size={28} className="animate-spin text-primary mb-3" />
+                                <p className="text-xs font-sans font-medium text-foreground/50">Fetching your documents...</p>
                             </div>
                         )}
 
                         {!isLoading && resumes?.length === 0 && (
-                            <div className="flex flex-col items-center text-center py-16 px-6 bg-surface-2 border border-white/[0.06] rounded-2xl">
-                                <div className="h-14 w-14 rounded-2xl bg-accent/10 border border-accent/20 text-accent flex items-center justify-center mb-4">
+                            <div className="flex flex-col items-center text-center py-16 px-6 rounded-2xl bg-white/5 border border-white/10">
+                                <div className="h-14 w-14 rounded-2xl bg-primary/10 border border-primary/20 text-primary flex items-center justify-center mb-4 premium-glow">
                                     <PlusCircle size={26} />
                                 </div>
-                                <h3 className="font-display text-base font-bold text-ink">No Resumes Uploaded Yet</h3>
-                                <p className="text-xs text-ink-muted mt-1.5 max-w-sm leading-relaxed">
-                                    Use the dropzone above to upload your first PDF resume. We will parse it and start scoring!
+                                <h3 className="font-display text-base font-bold text-foreground">No Resumes Uploaded Yet</h3>
+                                <p className="text-xs font-sans text-foreground/50 mt-1.5 max-w-sm leading-relaxed">
+                                    Use the evaluation engine above to securely upload your PDF. We will parse it and initiate scoring.
                                 </p>
                             </div>
                         )}
@@ -159,34 +159,34 @@ export default function ResumesDashboard() {
                                     <div
                                         key={r.id}
                                         onClick={() => router.push(`/resumes/${r.id}`)}
-                                        className="group relative flex items-center gap-4 bg-surface-2 hover:bg-[#1C1F2E] p-5 rounded-2xl border border-white/[0.06] hover:border-accent/40 shadow-card transition-all duration-200 cursor-pointer"
+                                        className="group relative flex items-center gap-4 bg-white/5 hover:bg-white/10 p-5 rounded-2xl border border-white/10 hover:border-primary/30 transition-all duration-300 cursor-pointer"
                                     >
                                         {/* Icon */}
-                                        <div className="h-11 w-11 rounded-xl bg-surface border border-white/[0.08] text-accent flex items-center justify-center shrink-0">
+                                        <div className="h-11 w-11 rounded-xl bg-black/20 border border-white/10 text-primary flex items-center justify-center shrink-0 group-hover:premium-glow transition-all">
                                             <FileText size={18} />
                                         </div>
 
                                         {/* Info */}
                                         <div className="flex-1 min-w-0">
-                                            <div className="font-display text-sm font-semibold text-ink truncate group-hover:text-accent transition-colors">
+                                            <div className="font-sans text-sm font-semibold text-foreground truncate group-hover:text-primary transition-colors">
                                                 {r.title}
                                             </div>
-                                            <div className="text-[11px] text-ink-muted mt-0.5 font-medium">
+                                            <div className="text-[11px] font-sans text-foreground/50 mt-0.5 font-medium">
                                                 Updated {new Date(r.updatedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                                             </div>
                                         </div>
 
                                         {/* Score Badge */}
                                         {latestScore !== undefined && (
-                                            <div className="flex flex-col items-end shrink-0 px-2.5 py-1 rounded-xl bg-surface border border-white/[0.06]">
-                                                <span className="text-[9px] uppercase font-bold tracking-wider text-ink-muted">ATS Score</span>
-                                                <span className="font-display text-xs font-bold text-accent">{latestScore}/100</span>
+                                            <div className="flex flex-col items-end shrink-0 px-3 py-1.5 rounded-xl bg-black/20 border border-white/10">
+                                                <span className="text-[9px] font-sans uppercase font-semibold tracking-widest text-foreground/40">Match</span>
+                                                <span className="font-display text-xs font-bold text-[#D4AF37]">{latestScore}%</span>
                                             </div>
                                         )}
 
                                         {/* Version Tag */}
-                                        <div className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-surface border border-white/[0.06] text-xs font-semibold text-ink-muted shrink-0">
-                                            <Layers size={12} className="text-accent" />
+                                        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black/20 border border-white/10 text-xs font-sans font-semibold text-foreground/50 shrink-0">
+                                            <Layers size={12} className="text-primary" />
                                             <span>v{r.versions?.length || 1}</span>
                                         </div>
 
@@ -194,13 +194,13 @@ export default function ResumesDashboard() {
                                         <button
                                             onClick={(e) => handleDelete(e, r.id)}
                                             disabled={deleteMutation.isPending}
-                                            className="h-8 w-8 rounded-lg hover:bg-danger/20 flex items-center justify-center text-ink-muted hover:text-danger transition-colors shrink-0"
+                                            className="h-8 w-8 rounded-lg hover:bg-[#EF4444]/20 flex items-center justify-center text-foreground/40 hover:text-[#EF4444] transition-colors shrink-0"
                                             title="Delete Resume"
                                         >
                                             <Trash2 size={15} />
                                         </button>
 
-                                        <ChevronRight size={16} className="text-ink-muted group-hover:text-accent group-hover:translate-x-0.5 transition-all shrink-0" />
+                                        <ChevronRight size={16} className="text-foreground/30 group-hover:text-primary group-hover:translate-x-1 transition-all shrink-0" />
                                     </div>
                                 );
                             })}
