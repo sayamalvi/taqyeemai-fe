@@ -4,7 +4,7 @@ import { useParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, FileText, Sparkles, Loader2, Target, AlertTriangle, ChevronDown } from 'lucide-react';
-import { useResume, useAnalysisForVersion, useAnalyzeResume, useApplyRewrites } from '@/hooks/useResumeVersions';
+import { useResume, useAnalysisForVersion, useAnalyzeResume, useApplyRewrites, useGenerateLatex } from '@/hooks/useResumeVersions';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -58,6 +58,20 @@ export default function ResumeDetailPage() {
     const atsDelta = prevAnalysis && analysis ? Math.round((analysis.atsScore - prevAnalysis.atsScore) * 10) / 10 : null;
     const probDelta = prevAnalysis && analysis ? analysis.interviewProbability - prevAnalysis.interviewProbability : null;
 
+    const generateLatexMutation = useGenerateLatex(id);
+    const [copied, setCopied] = useState(false);
+
+    async function handleGenerateLatex() {
+        if (!activeVersionId) return;
+        await generateLatexMutation.mutateAsync(activeVersionId);
+    }
+
+    function handleCopyLatex(code: string) {
+        navigator.clipboard.writeText(code);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    }
+
     function handleAnalyze() {
         if (!activeVersionId) return;
         analyzeMutation.mutate({
@@ -92,7 +106,7 @@ export default function ResumeDetailPage() {
 
     return (
         <main className="min-h-screen py-8 px-4 sm:px-8 max-w-7xl mx-auto space-y-8 text-foreground">
-            
+
             <FadeIn delay={0.05}>
                 <div className="space-y-4">
                     <Link href="/resumes" className="inline-flex items-center gap-2 text-xs font-sans font-semibold text-foreground/50 hover:text-primary transition-colors group">
@@ -123,7 +137,7 @@ export default function ResumeDetailPage() {
                             <span className="h-2 w-2 rounded-full bg-primary" />
                             <h3 className="font-display text-base font-bold tracking-tight">Version Control</h3>
                         </div>
-                        
+
                         <div className="flex items-center gap-1.5 bg-black/20 border border-white/10 p-1.5 rounded-2xl w-fit">
                             {versions.map((v: any) => (
                                 <button
@@ -345,7 +359,50 @@ export default function ResumeDetailPage() {
                             />
                         </div>
                     )}
+                    {/* LaTeX Generator Section */}
+                    {/* <div className="glass-panel rounded-3xl p-6 md:p-8 space-y-4">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                            <div>
+                                <h3 className="font-display text-lg font-bold flex items-center gap-2">
+                                    <FileText size={18} className="text-primary" />
+                                    ATS-Optimized LaTeX Export
+                                </h3>
+                                <p className="text-xs font-sans text-foreground/50 mt-1">
+                                    Generate a clean, single-column LaTeX resume guaranteed to parse perfectly in modern ATS systems.
+                                </p>
+                            </div>
 
+                            {!analysis.latexCode ? (
+                                <Button
+                                    onClick={handleGenerateLatex}
+                                    disabled={generateLatexMutation.isPending}
+                                    className="bg-primary hover:bg-primary/90 text-white text-xs font-semibold rounded-xl premium-glow"
+                                >
+                                    {generateLatexMutation.isPending ? (
+                                        <><Loader2 size={14} className="animate-spin mr-2" /> Generating...</>
+                                    ) : (
+                                        <><Sparkles size={14} className="mr-2" /> Generate LaTeX</>
+                                    )}
+                                </Button>
+                            ) : (
+                                <Button
+                                    onClick={() => handleCopyLatex(analysis.latexCode)}
+                                    variant="outline"
+                                    className="border-primary/20 text-primary hover:bg-primary/10 text-xs font-semibold rounded-xl"
+                                >
+                                    {copied ? 'Copied!' : 'Copy Code'}
+                                </Button>
+                            )}
+                        </div>
+
+                        {analysis.latexCode && (
+                            <div className="relative mt-4">
+                                <pre className="p-4 bg-black/40 border border-white/10 rounded-2xl text-[10px] sm:text-[11px] overflow-auto max-h-[400px] text-foreground/80 font-mono custom-scrollbar">
+                                    {analysis.latexCode}
+                                </pre>
+                            </div>
+                        )}
+                    </div> */}
                     <details className="group mt-8">
                         <summary className="text-xs font-sans text-foreground/40 cursor-pointer hover:text-foreground/80 font-medium inline-flex items-center gap-1.5 transition-colors">
                             <span>Inspect Raw Evaluation Data</span>
