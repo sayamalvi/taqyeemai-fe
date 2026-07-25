@@ -82,3 +82,25 @@ export function useGenerateLatex(id: string) {
         }
     });
 }
+
+export function useDownloadPdf(id: string) {
+    return useMutation({
+        mutationFn: async (versionId: string) => {
+            const response = await api.post(`/resume/${id}/versions/${versionId}/download`, undefined, {
+                responseType: 'blob'
+            });
+            return response.data as Blob;
+        },
+        onSuccess: (blob) => {
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `Optimized_Resume.pdf`);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(url);
+        }
+    });
+}
+

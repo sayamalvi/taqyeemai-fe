@@ -3,8 +3,8 @@
 import { useParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, FileText, Sparkles, Loader2, Target, AlertTriangle, ChevronDown } from 'lucide-react';
-import { useResume, useAnalysisForVersion, useAnalyzeResume, useApplyRewrites, useGenerateLatex } from '@/hooks/useResumeVersions';
+import { ArrowLeft, FileText, Sparkles, Loader2, Target, AlertTriangle, ChevronDown, Download } from 'lucide-react';
+import { useResume, useAnalysisForVersion, useAnalyzeResume, useApplyRewrites, useGenerateLatex, useDownloadPdf } from '@/hooks/useResumeVersions';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -60,6 +60,13 @@ export default function ResumeDetailPage() {
 
     const generateLatexMutation = useGenerateLatex(id);
     const [copied, setCopied] = useState(false);
+
+    const downloadPdfMutation = useDownloadPdf(id);
+
+    async function handleDownloadPdf() {
+        if (!activeVersionId) return;
+        await downloadPdfMutation.mutateAsync(activeVersionId);
+    }
 
     async function handleGenerateLatex() {
         if (!activeVersionId) return;
@@ -403,6 +410,33 @@ export default function ResumeDetailPage() {
                             </div>
                         )}
                     </div> */}
+                    {/* PDF Download Section */}
+                    <div className="glass-panel rounded-3xl p-6 md:p-8 space-y-4">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                            <div>
+                                <h3 className="font-display text-lg font-bold flex items-center gap-2">
+                                    <FileText size={18} className="text-primary" />
+                                    ATS-Optimized PDF Export
+                                </h3>
+                                <p className="text-xs font-sans text-foreground/50 mt-1">
+                                    Download a clean, single-column PDF resume guaranteed to parse perfectly in modern ATS systems.
+                                </p>
+                            </div>
+
+                            <Button
+                                onClick={handleDownloadPdf}
+                                disabled={downloadPdfMutation.isPending}
+                                className="bg-primary hover:bg-primary/90 text-white text-xs font-semibold rounded-xl premium-glow"
+                            >
+                                {downloadPdfMutation.isPending ? (
+                                    <><Loader2 size={14} className="animate-spin mr-2" /> Compiling...</>
+                                ) : (
+                                    <><Download size={14} className="mr-2" /> Download PDF</>
+                                )}
+                            </Button>
+                        </div>
+                    </div>
+
                     <details className="group mt-8">
                         <summary className="text-xs font-sans text-foreground/40 cursor-pointer hover:text-foreground/80 font-medium inline-flex items-center gap-1.5 transition-colors">
                             <span>Inspect Raw Evaluation Data</span>
