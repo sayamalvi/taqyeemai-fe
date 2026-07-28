@@ -22,6 +22,7 @@ export default function ResumeDetailPage() {
 
     const [activeVersionId, setActiveVersionId] = useState<string | null>(null);
     const [targetRole, setTargetRole] = useState('');
+    const [targetJobDescription, setTargetJobDescription] = useState('');
 
     const analyzeMutation = useAnalyzeResume(id);
     const applyRewritesMutation = useApplyRewrites(id);
@@ -55,8 +56,7 @@ export default function ResumeDetailPage() {
     const { data: prevAnalysisData } = useAnalysisForVersion(id, previousVersionId);
     const prevAnalysis = prevAnalysisData?.analysis;
 
-    const atsDelta = prevAnalysis && analysis ? Math.round((analysis.atsScore - prevAnalysis.atsScore) * 10) / 10 : null;
-    const probDelta = prevAnalysis && analysis ? analysis.interviewProbability - prevAnalysis.interviewProbability : null;
+    const healthDelta = prevAnalysis && analysis ? analysis.resumeHealthScore - prevAnalysis.resumeHealthScore : null;
 
     const generateLatexMutation = useGenerateLatex(id);
     const [copied, setCopied] = useState(false);
@@ -84,6 +84,7 @@ export default function ResumeDetailPage() {
         analyzeMutation.mutate({
             versionId: activeVersionId,
             targetRole: targetRole.trim() || undefined,
+            targetJobDescription: targetJobDescription.trim() || undefined,
         });
     }
 
@@ -166,7 +167,7 @@ export default function ResumeDetailPage() {
                         </div>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-[450px]">
+                    <div className="flex flex-col gap-3 w-full lg:w-[450px]">
                         <div className="relative w-full">
                             <Target size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-foreground/40" />
                             <Input
@@ -176,10 +177,18 @@ export default function ResumeDetailPage() {
                                 className="pl-9 h-11 bg-black/40 border-white/10 text-sm font-sans rounded-xl focus:border-primary text-foreground placeholder:text-foreground/30 transition-all"
                             />
                         </div>
+                        <div className="relative w-full">
+                            <textarea
+                                placeholder="Paste Job Description here (Optional if Target Role provided)"
+                                value={targetJobDescription}
+                                onChange={(e) => setTargetJobDescription(e.target.value)}
+                                className="w-full p-3 bg-black/40 border border-white/10 text-sm font-sans rounded-xl focus:border-primary focus:outline-none text-foreground placeholder:text-foreground/30 transition-all min-h-[80px] resize-y custom-scrollbar"
+                            />
+                        </div>
                         <Button
                             onClick={handleAnalyze}
-                            disabled={analyzeMutation.isPending || !activeVersionId}
-                            className="w-full sm:w-auto h-11 px-6 bg-primary hover:bg-primary/90 text-white font-sans font-semibold rounded-xl transition-all duration-200 shrink-0 text-xs premium-glow"
+                            disabled={analyzeMutation.isPending || !activeVersionId || (!targetRole.trim() && !targetJobDescription.trim())}
+                            className="w-full h-11 px-6 bg-primary hover:bg-primary/90 text-white font-sans font-semibold rounded-xl transition-all duration-200 shrink-0 text-xs premium-glow"
                         >
                             {analyzeMutation.isPending ? (
                                 <span className="flex items-center gap-2">
@@ -187,7 +196,7 @@ export default function ResumeDetailPage() {
                                     <span>Auditing...</span>
                                 </span>
                             ) : (
-                                <span className="flex items-center gap-2">
+                                <span className="flex items-center justify-center gap-2">
                                     <Sparkles size={15} />
                                     <span>Run AI Audit</span>
                                 </span>
@@ -231,50 +240,45 @@ export default function ResumeDetailPage() {
                                 </p>
                             </div>
 
-                            <div className="flex items-center gap-8 md:gap-12 flex-wrap justify-center">
+                            <div className="flex items-center justify-center w-full md:w-auto">
                                 <div className="relative">
                                     <ScoreRing
-                                        value={analysis.atsScore}
-                                        label="ATS Match"
+                                        value={analysis.resumeHealthScore}
+                                        label="Resume Health"
                                         sublabel="/ 100"
                                         color="accent"
-                                        size={110}
-                                        strokeWidth={6}
+                                        size={140}
+                                        strokeWidth={8}
                                     />
-                                    {atsDelta !== null && atsDelta !== 0 && (
+                                    {healthDelta !== null && healthDelta !== 0 && (
                                         <div className={cn(
-                                            "mt-1 text-center font-sans text-xs font-bold flex items-center justify-center gap-0.5",
-                                            atsDelta > 0 ? "text-[#10B981]" : "text-[#EF4444]"
+                                            "mt-2 text-center font-sans text-sm font-bold flex items-center justify-center gap-1",
+                                            healthDelta > 0 ? "text-[#10B981]" : "text-[#EF4444]"
                                         )}>
-                                            <span>{atsDelta > 0 ? '↑' : '↓'}</span>
-                                            <span>{Math.abs(atsDelta)} pts vs prev</span>
-                                        </div>
-                                    )}
-                                </div>
-
-                                <div className="h-16 w-px bg-white/10 hidden sm:block" />
-
-                                <div className="relative">
-                                    <ScoreRing
-                                        value={analysis.interviewProbability}
-                                        label="Interview Probability"
-                                        sublabel="%"
-                                        color="gold"
-                                        size={110}
-                                        strokeWidth={6}
-                                    />
-                                    {probDelta !== null && probDelta !== 0 && (
-                                        <div className={cn(
-                                            "mt-1 text-center font-sans text-xs font-bold flex items-center justify-center gap-0.5",
-                                            probDelta > 0 ? "text-[#10B981]" : "text-[#EF4444]"
-                                        )}>
-                                            <span>{probDelta > 0 ? '↑' : '↓'}</span>
-                                            <span>{Math.abs(probDelta)}% vs prev</span>
+                                            <span>{healthDelta > 0 ? '↑' : '↓'}</span>
+                                            <span>{Math.abs(healthDelta)} pts vs prev</span>
                                         </div>
                                     )}
                                 </div>
                             </div>
                         </div>
+
+                        {analysis.scoreBreakdown && (
+                            <div className="grid grid-cols-3 gap-4 pt-6 mt-6 border-t border-white/10">
+                                <div className="space-y-1 text-center">
+                                    <p className="text-[10px] font-sans font-bold text-foreground/50 uppercase tracking-wider">Impact Metrics</p>
+                                    <p className="text-xl font-display font-bold text-foreground">{analysis.scoreBreakdown.impact}<span className="text-sm text-foreground/40">/100</span></p>
+                                </div>
+                                <div className="space-y-1 text-center border-l border-white/10">
+                                    <p className="text-[10px] font-sans font-bold text-foreground/50 uppercase tracking-wider">Skills Match</p>
+                                    <p className="text-xl font-display font-bold text-foreground">{analysis.scoreBreakdown.skills}<span className="text-sm text-foreground/40">/100</span></p>
+                                </div>
+                                <div className="space-y-1 text-center border-l border-white/10">
+                                    <p className="text-[10px] font-sans font-bold text-foreground/50 uppercase tracking-wider">Formatting</p>
+                                    <p className="text-xl font-display font-bold text-foreground">{analysis.scoreBreakdown.formatting}<span className="text-sm text-foreground/40">/100</span></p>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     <div className="glass-panel rounded-3xl p-6 md:p-8 space-y-6">
@@ -357,13 +361,25 @@ export default function ResumeDetailPage() {
                         </div>
                     </div>
 
-                    {analysis.rewrites && (analysis.rewrites as any[]).length > 0 && (
+                    {analysis.rewrites && (analysis.rewrites as any[]).length > 0 ? (
                         <div className="pt-4">
                             <BulletRewrites
                                 rewrites={analysis.rewrites}
                                 isApplying={applyRewritesMutation.isPending}
                                 onApply={handleApplyRewrites}
                             />
+                        </div>
+                    ) : (
+                        <div className="glass-panel rounded-3xl p-8 flex items-center justify-center text-center mt-4">
+                            <div className="space-y-2 max-w-sm">
+                                <div className="h-12 w-12 rounded-full bg-[#10B981]/10 flex items-center justify-center text-[#10B981] mx-auto mb-4 border border-[#10B981]/20">
+                                    <Sparkles size={20} />
+                                </div>
+                                <h3 className="font-display text-lg font-bold text-[#10B981]">No Bullet Rewrites Needed</h3>
+                                <p className="text-sm font-sans text-foreground/60 leading-relaxed">
+                                    Your existing experience bullets are strong! Please review the <strong>general recommendations</strong> above (like adding links or formatting) manually.
+                                </p>
+                            </div>
                         </div>
                     )}
                     {/* LaTeX Generator Section */}

@@ -33,7 +33,7 @@ export function useAnalysisForVersion(id: string, versionId: string) {
 export function useAnalyzeResume(id: string) {
     const qc = useQueryClient();
     return useMutation({
-        mutationFn: async (data: { versionId: string, targetRole?: string }) => {
+        mutationFn: async (data: { versionId: string, targetRole?: string, targetJobDescription?: string }) => {
             const response = await api.post(`/resume/${id}/analyze`, data);
             return response.data;
         },

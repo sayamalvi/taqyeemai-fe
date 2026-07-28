@@ -14,8 +14,6 @@ const MAX_BYTES = 5 * 1024 * 1024; // 5MB limit
 export function UploadDropzone({ onUploaded }: { onUploaded?: (data: any) => void }) {
     const [file, setFile] = useState<File | null>(null);
     const [title, setTitle] = useState('');
-    const [targetRole, setTargetRole] = useState('');
-    const [targetJobDescription, setTargetJobDescription] = useState('');
     const [err, setErr] = useState('');
     const upload = useUploadResume();
 
@@ -42,13 +40,9 @@ export function UploadDropzone({ onUploaded }: { onUploaded?: (data: any) => voi
             const result = await upload.mutateAsync({
                 file,
                 title,
-                targetRole,
-                targetJobDescription,
             });
             setFile(null);
             setTitle('');
-            setTargetRole('');
-            setTargetJobDescription('');
 
             onUploaded?.(result);
         } catch (e: any) {
@@ -136,26 +130,6 @@ export function UploadDropzone({ onUploaded }: { onUploaded?: (data: any) => voi
                             />
                         </div>
 
-                        <div className="space-y-1.5">
-                            <label className="text-[11px] font-sans font-semibold text-foreground/80 pl-1">Target Role <span className="text-foreground/40 font-normal">(Optional)</span></label>
-                            <Input
-                                placeholder="e.g. Lead Fullstack Engineer"
-                                value={targetRole}
-                                onChange={(e) => setTargetRole(e.target.value)}
-                                className="h-12 rounded-xl bg-black/40 border-white/10 focus:border-primary focus:ring-1 focus:ring-primary/50 text-foreground placeholder:text-foreground/30 text-sm transition-all"
-                            />
-                        </div>
-
-                        <div className="space-y-1.5">
-                            <label className="text-[11px] font-sans font-semibold text-foreground/80 pl-1">Job Description <span className="text-foreground/40 font-normal">(Optional)</span></label>
-                            <textarea
-                                className="w-full min-h-[100px] text-sm p-4 bg-black/40 border border-white/10 rounded-xl focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 text-foreground resize-none placeholder:text-foreground/30 font-sans transition-all"
-                                placeholder="Paste target job description to calibrate ATS evaluation..."
-                                value={targetJobDescription}
-                                onChange={(e) => setTargetJobDescription(e.target.value)}
-                            />
-                        </div>
-
                         <Button
                             onClick={submit}
                             disabled={upload.isPending}
@@ -169,7 +143,7 @@ export function UploadDropzone({ onUploaded }: { onUploaded?: (data: any) => voi
                             ) : (
                                 <span className="flex items-center justify-center gap-2">
                                     <Sparkles size={16} />
-                                    <span>Initiate Evaluation</span>
+                                    <span>Upload Resume</span>
                                 </span>
                             )}
                         </Button>
