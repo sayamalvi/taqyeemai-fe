@@ -24,7 +24,6 @@ export default function RegisterPage() {
 
         try {
             const response = await api.post('/auth/register', { name, email, password });
-            localStorage.setItem('accessToken', response.data.accessToken);
             router.push('/resumes');
         } catch (err: any) {
             setError(err.response?.data?.message || 'Registration failed');
@@ -36,7 +35,7 @@ export default function RegisterPage() {
     return (
         <FadeIn delay={0.1}>
             <div className="glass-panel p-8 sm:p-10 rounded-3xl space-y-8">
-                
+
                 <div className="space-y-2">
                     <h2 className="font-display text-3xl font-bold text-foreground tracking-tight">Create an account</h2>
                     <p className="text-sm font-sans text-foreground/60">Start your journey to better interviews.</p>

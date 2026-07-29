@@ -23,7 +23,6 @@ export default function LoginPage() {
 
         try {
             const response = await api.post('/auth/login', { email, password });
-            localStorage.setItem('accessToken', response.data.accessToken);
             router.push('/resumes');
         } catch (err: any) {
             setError(err.response?.data?.message || 'Invalid email or password');
@@ -35,7 +34,7 @@ export default function LoginPage() {
     return (
         <FadeIn delay={0.1}>
             <div className="glass-panel p-8 sm:p-10 rounded-3xl space-y-8">
-                
+
                 <div className="space-y-2">
                     <h2 className="font-display text-3xl font-bold text-foreground tracking-tight">Welcome back</h2>
                     <p className="text-sm font-sans text-foreground/60">Enter your credentials to access your roster.</p>

@@ -6,6 +6,7 @@ import { LayoutGrid, FileText, BarChart3, History, Settings, LogOut } from 'luci
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Logo } from '@/components/ui/logo';
+import { api } from '../../../api';
 
 const NAV = [
     { to: '/', icon: LayoutGrid, label: 'Dashboard' },
@@ -56,9 +57,14 @@ export function Sidebar() {
     const pathname = usePathname();
     const router = useRouter();
 
-    function handleLogout() {
-        localStorage.removeItem('accessToken');
-        router.push('/login');
+    async function handleLogout() {
+        try {
+            await api.post('/auth/logout');
+        } catch (error) {
+            console.error('Logout failed:', error);
+        } finally {
+            router.push('/login');
+        }
     }
 
     return (
