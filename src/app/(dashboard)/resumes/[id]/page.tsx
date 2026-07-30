@@ -50,6 +50,10 @@ export default function ResumeDetailPage() {
 
     const { data: analysisData, isFetching: isFetchingAnalysis } = useAnalysisForVersion(id, activeVersionId || '');
     const analysis = analysisData?.analysis;
+    const pendingRewrites = analysis?.rewrites || [];
+    const isSameRole = analysis && targetRole.trim() === (analysis.targetRole || '');
+    const isSameJD = analysis && targetJobDescription.trim() === (analysis.targetJobDescription || '');
+    const noMoreRewrites = analysis && pendingRewrites.length === 0;
 
     const currentVersionIndex = versions.findIndex((v: any) => v.id === activeVersionId);
     const previousVersionId = currentVersionIndex > 0 ? versions[currentVersionIndex - 1].id : '';
@@ -187,13 +191,23 @@ export default function ResumeDetailPage() {
                         </div>
                         <Button
                             onClick={handleAnalyze}
-                            disabled={analyzeMutation.isPending || !activeVersionId || (!targetRole.trim() && !targetJobDescription.trim())}
+                            disabled={
+                                analyzeMutation.isPending || 
+                                !activeVersionId || 
+                                (!targetRole.trim() && !targetJobDescription.trim()) || 
+                                (isSameRole && isSameJD && noMoreRewrites)
+                            }
                             className="w-full h-11 px-6 bg-primary hover:bg-primary/90 text-white font-sans font-semibold rounded-xl transition-all duration-200 shrink-0 text-xs premium-glow"
                         >
                             {analyzeMutation.isPending ? (
                                 <span className="flex items-center gap-2">
                                     <Loader2 size={16} className="animate-spin" />
                                     <span>Auditing...</span>
+                                </span>
+                            ) : isSameRole && isSameJD && noMoreRewrites ? (
+                                <span className="flex items-center justify-center gap-2">
+                                    <Sparkles size={15} />
+                                    <span>Resume Optimized</span>
                                 </span>
                             ) : (
                                 <span className="flex items-center justify-center gap-2">
