@@ -7,6 +7,8 @@ import { cn } from "@/lib/utils";
 export interface Rewrite {
     section?: string;
     original: string;
+    existing_skills_found?: string;
+    flaw_analysis?: string;
     rewritten: string;
     rationale?: string;
 }
@@ -182,6 +184,26 @@ export function BulletRewrites({ rewrites, onApply, isApplying, error }: BulletR
                                     <p className="text-xs font-sans text-foreground/50 leading-relaxed line-through">
                                         {r.original}
                                     </p>
+                                    {(r.existing_skills_found || r.flaw_analysis) && (
+                                        <details className="mt-3 group/cot cursor-pointer">
+                                            <summary className="text-[10px] font-sans font-bold text-foreground/40 uppercase tracking-wider select-none flex items-center gap-1 hover:text-primary transition-colors">
+                                                <span>Inspect AI Reasoning</span>
+                                                <div className="transition-transform group-open/cot:rotate-180">▼</div>
+                                            </summary>
+                                            <div className="mt-2 space-y-2 p-3 bg-black/40 rounded-xl border border-white/5">
+                                                {r.existing_skills_found && (
+                                                    <p className="text-[11px] font-sans text-foreground/70">
+                                                        <span className="font-bold text-foreground/90">Detected Skills:</span> {r.existing_skills_found}
+                                                    </p>
+                                                )}
+                                                {r.flaw_analysis && (
+                                                    <p className="text-[11px] font-sans text-foreground/70 leading-relaxed">
+                                                        <span className="font-bold text-foreground/90">Analysis:</span> {r.flaw_analysis}
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </details>
+                                    )}
                                 </div>
 
                                 {/* Arrow Icon */}
