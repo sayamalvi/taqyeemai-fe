@@ -69,19 +69,6 @@ export function useApplyRewrites(id: string) {
     });
 }
 
-export function useGenerateLatex(id: string) {
-    const qc = useQueryClient();
-    return useMutation({
-        mutationFn: async (versionId: string) => {
-            const response = await api.post(`/resume/${id}/versions/${versionId}/latex`);
-            return response.data as { latexCode: string };
-        },
-        onSuccess: (data, versionId) => {
-            // Invalidate the analysis query so the UI fetches the newly saved latexCode
-            qc.invalidateQueries({ queryKey: resumeKeys.versionAnalysis(id, versionId) });
-        }
-    });
-}
 
 export function useDownloadPdf(id: string) {
     return useMutation({

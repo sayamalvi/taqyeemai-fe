@@ -4,7 +4,7 @@ import { useParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, FileText, Sparkles, Loader2, Target, AlertTriangle, ChevronDown, Download } from 'lucide-react';
-import { useResume, useAnalysisForVersion, useAnalyzeResume, useApplyRewrites, useGenerateLatex, useDownloadPdf } from '@/hooks/useResumeVersions';
+import { useResume, useAnalysisForVersion, useAnalyzeResume, useApplyRewrites, useDownloadPdf } from '@/hooks/useResumeVersions';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -62,8 +62,7 @@ export default function ResumeDetailPage() {
 
     const healthDelta = prevAnalysis && analysis ? analysis.resumeHealthScore - prevAnalysis.resumeHealthScore : null;
 
-    const generateLatexMutation = useGenerateLatex(id);
-    const [copied, setCopied] = useState(false);
+
 
     const downloadPdfMutation = useDownloadPdf(id);
 
@@ -72,16 +71,7 @@ export default function ResumeDetailPage() {
         await downloadPdfMutation.mutateAsync(activeVersionId);
     }
 
-    async function handleGenerateLatex() {
-        if (!activeVersionId) return;
-        await generateLatexMutation.mutateAsync(activeVersionId);
-    }
 
-    function handleCopyLatex(code: string) {
-        navigator.clipboard.writeText(code);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-    }
 
     function handleAnalyze() {
         if (!activeVersionId) return;
@@ -183,7 +173,7 @@ export default function ResumeDetailPage() {
                         </div>
                         <div className="relative w-full">
                             <textarea
-                                placeholder="Paste Job Description here (Optional if Target Role provided)"
+                                placeholder="Paste Job Description here (Required for accurate scoring)"
                                 value={targetJobDescription}
                                 onChange={(e) => setTargetJobDescription(e.target.value)}
                                 className="w-full p-3 bg-black/40 border border-white/10 text-sm font-sans rounded-xl focus:border-primary focus:outline-none text-foreground placeholder:text-foreground/30 transition-all min-h-[80px] resize-y custom-scrollbar"
@@ -192,9 +182,10 @@ export default function ResumeDetailPage() {
                         <Button
                             onClick={handleAnalyze}
                             disabled={
-                                analyzeMutation.isPending || 
-                                !activeVersionId || 
-                                (!targetRole.trim() && !targetJobDescription.trim()) || 
+                                analyzeMutation.isPending ||
+                                !activeVersionId ||
+                                !targetRole.trim() ||
+                                targetJobDescription.trim().length < 100 ||
                                 (isSameRole && isSameJD && noMoreRewrites)
                             }
                             className="w-full h-11 px-6 bg-primary hover:bg-primary/90 text-white font-sans font-semibold rounded-xl transition-all duration-200 shrink-0 text-xs premium-glow"
@@ -396,50 +387,7 @@ export default function ResumeDetailPage() {
                             </div>
                         </div>
                     )}
-                    {/* LaTeX Generator Section */}
-                    {/* <div className="glass-panel rounded-3xl p-6 md:p-8 space-y-4">
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                            <div>
-                                <h3 className="font-display text-lg font-bold flex items-center gap-2">
-                                    <FileText size={18} className="text-primary" />
-                                    ATS-Optimized LaTeX Export
-                                </h3>
-                                <p className="text-xs font-sans text-foreground/50 mt-1">
-                                    Generate a clean, single-column LaTeX resume guaranteed to parse perfectly in modern ATS systems.
-                                </p>
-                            </div>
 
-                            {!analysis.latexCode ? (
-                                <Button
-                                    onClick={handleGenerateLatex}
-                                    disabled={generateLatexMutation.isPending}
-                                    className="bg-primary hover:bg-primary/90 text-white text-xs font-semibold rounded-xl premium-glow"
-                                >
-                                    {generateLatexMutation.isPending ? (
-                                        <><Loader2 size={14} className="animate-spin mr-2" /> Generating...</>
-                                    ) : (
-                                        <><Sparkles size={14} className="mr-2" /> Generate LaTeX</>
-                                    )}
-                                </Button>
-                            ) : (
-                                <Button
-                                    onClick={() => handleCopyLatex(analysis.latexCode)}
-                                    variant="outline"
-                                    className="border-primary/20 text-primary hover:bg-primary/10 text-xs font-semibold rounded-xl"
-                                >
-                                    {copied ? 'Copied!' : 'Copy Code'}
-                                </Button>
-                            )}
-                        </div>
-
-                        {analysis.latexCode && (
-                            <div className="relative mt-4">
-                                <pre className="p-4 bg-black/40 border border-white/10 rounded-2xl text-[10px] sm:text-[11px] overflow-auto max-h-[400px] text-foreground/80 font-mono custom-scrollbar">
-                                    {analysis.latexCode}
-                                </pre>
-                            </div>
-                        )}
-                    </div> */}
                     {/* PDF Download Section */}
                     <div className="glass-panel rounded-3xl p-6 md:p-8 space-y-4">
                         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
