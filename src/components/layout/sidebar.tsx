@@ -9,7 +9,7 @@ import { Logo } from '@/components/ui/logo';
 import { api } from '../../../api';
 
 const NAV = [
-    { to: '/', icon: LayoutGrid, label: 'Dashboard' },
+    { to: '/dashboard', icon: LayoutGrid, label: 'Dashboard' },
     { to: '/resumes', icon: FileText, label: 'Resumes' },
     { to: '/insights', icon: BarChart3, label: 'Insights' },
     { to: '/history', icon: History, label: 'History' },
@@ -98,7 +98,7 @@ export function Sidebar() {
                         <NavItem
                             key={item.to}
                             {...item}
-                            isActive={pathname === item.to || (item.to !== '/' && pathname.startsWith(item.to))}
+                            isActive={pathname === item.to || (item.to !== '/dashboard' && pathname.startsWith(item.to))}
                         />
                     ))}
                 </nav>

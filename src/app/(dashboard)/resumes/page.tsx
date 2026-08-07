@@ -41,7 +41,7 @@ export default function ResumesDashboard() {
     const avgScore = scores.length > 0 ? Math.round(scores.reduce((a: number, b: number) => a + b, 0) / scores.length) : null;
 
     return (
-        <main className="p-4 sm:p-6 md:p-10 max-w-7xl mx-auto space-y-8 min-h-screen text-foreground">
+        <main className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-8 min-h-screen w-full text-foreground">
 
             {/* ─── BENTO GRID LAYOUT ─── */}
             <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">

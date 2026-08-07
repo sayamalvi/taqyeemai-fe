@@ -88,7 +88,7 @@ export default function LandingPage() {
             </Link>
             
             <Link 
-              href="/login"
+              href="/dashboard"
               className="group flex items-center justify-center gap-3 glass-panel text-white font-semibold text-base px-8 py-4 rounded-2xl w-full sm:w-auto hover:bg-white/10 transition-colors"
             >
               Enter Dashboard
