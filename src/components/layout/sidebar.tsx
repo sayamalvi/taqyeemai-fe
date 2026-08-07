@@ -7,6 +7,8 @@ import { cn } from '@/lib/utils';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Logo } from '@/components/ui/logo';
 import { api } from '../../../api';
+import { useUser } from '@/hooks/useUser';
+import { Zap } from 'lucide-react';
 
 const NAV = [
     { to: '/dashboard', icon: LayoutGrid, label: 'Dashboard' },
@@ -56,6 +58,7 @@ function NavItem({ to, icon: Icon, label, isActive }: { to: string; icon: any; l
 export function Sidebar() {
     const pathname = usePathname();
     const router = useRouter();
+    const { data: user } = useUser();
 
     async function handleLogout() {
         try {
@@ -124,16 +127,31 @@ export function Sidebar() {
                 </button>
 
                 {/* User Avatar */}
+                {/* Credits Badge */}
                 <div className={cn(
-                    "flex items-center h-12 mt-4 w-10 group-hover/sidebar:w-[200px] overflow-hidden",
+                    "flex items-center h-10 w-10 group-hover/sidebar:w-[200px] overflow-hidden",
+                    "transition-[width] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                )}>
+                    <span className="h-10 w-10 flex items-center justify-center shrink-0">
+                        <Zap size={16} className="text-[#D4AF37]" />
+                    </span>
+                    <span className={cn(LABEL_BASE)}>
+                        <span className="text-sm font-semibold text-[#D4AF37]">{user?.credits ?? '–'}</span>
+                        <span className="text-foreground/50 text-xs"> credits left</span>
+                    </span>
+                </div>
+
+                {/* User Avatar */}
+                <div className={cn(
+                    "flex items-center h-12 mt-2 w-10 group-hover/sidebar:w-[200px] overflow-hidden",
                     "transition-[width] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
                 )}>
                     <div className="h-10 w-10 rounded-full bg-primary/10 text-primary font-sans font-semibold flex items-center justify-center text-sm ring-1 ring-primary/20 shrink-0">
-                        SA
+                        {user?.name?.charAt(0)?.toUpperCase() ?? '?'}
                     </div>
                     <div className={cn("ml-3 min-w-0 flex-1", LABEL_BASE)}>
-                        <div className="text-sm font-semibold text-foreground truncate">Sayam Alvi</div>
-                        <div className="text-[10px] text-foreground/50 truncate">Premium</div>
+                        <div className="text-sm font-semibold text-foreground truncate">{user?.name ?? 'Loading...'}</div>
+                        <div className="text-[10px] text-foreground/50 truncate">{user?.tier ?? 'FREE'}</div>
                     </div>
                 </div>
             </div>

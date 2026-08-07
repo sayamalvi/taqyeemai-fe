@@ -41,6 +41,7 @@ export function useAnalyzeResume(id: string) {
             // Refetch the detail and analysis data to update the UI instantly
             qc.invalidateQueries({ queryKey: resumeKeys.detail(id) });
             qc.invalidateQueries({ queryKey: resumeKeys.versionAnalysis(id, variables.versionId) });
+            qc.invalidateQueries({ queryKey: ['user', 'me'] });
         }
     });
 }
