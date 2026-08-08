@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 // Define the routes that do NOT require authentication
-const publicPaths = ['/login', '/signup', '/'];
+const publicPaths = ['/login', '/register', '/'];
 
 export function proxy(request: NextRequest) {
     const authCookie = request.cookies.get('Authentication');
@@ -16,7 +16,7 @@ export function proxy(request: NextRequest) {
     }
 
     // If the user IS authenticated and tries to visit login/signup, redirect them to dashboard
-    if (authCookie && (pathname === '/login' || pathname === '/signup')) {
+    if (authCookie && (pathname === '/login' || pathname === '/register')) {
         return NextResponse.redirect(new URL('/dashboard', request.url));
     }
 
