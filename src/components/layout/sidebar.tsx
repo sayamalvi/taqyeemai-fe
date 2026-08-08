@@ -67,6 +67,7 @@ export function Sidebar() {
             console.error('Logout failed:', error);
         } finally {
             router.push('/login');
+            router.refresh();
         }
     }
 
