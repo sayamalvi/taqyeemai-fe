@@ -12,7 +12,7 @@ interface FailedRequest {
 
 
 export const api = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
+    baseURL: '/api',
     withCredentials: true
 });
 

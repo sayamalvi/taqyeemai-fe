@@ -4,7 +4,7 @@ import type { NextRequest } from 'next/server';
 // Define the routes that do NOT require authentication
 const publicPaths = ['/login', '/signup', '/'];
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
     const authCookie = request.cookies.get('Authentication');
     const { pathname } = request.nextUrl;
 

@@ -21,7 +21,8 @@ export default async function ExportPage({ params }: { params: Promise<{ id: str
     const authorization = incomingHeaders.get('authorization') || '';
     const cookie = incomingHeaders.get('cookie') || '';
     
-    const res = await fetch(`http://127.0.0.1:4000/resume/${resolvedParams.id}/versions/${resolvedParams.versionId}/analysis`, {
+    const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000';
+    const res = await fetch(`${baseUrl}/resume/${resolvedParams.id}/versions/${resolvedParams.versionId}/analysis`, {
         cache: 'no-store',
         headers: {
             'Authorization': authorization,
