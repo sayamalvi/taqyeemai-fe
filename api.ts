@@ -47,7 +47,7 @@ api.interceptors.response.use(
                 url.includes('/auth/register')
             ) {
                 if (url.includes('/auth/refresh')) {
-                    // window.location.href = '/login';
+                    window.location.href = '/login';
                     console.error("INTERCEPTOR CAUGHT REFRESH ERROR!", error);
                 }
                 return Promise.reject(error);
@@ -73,7 +73,7 @@ api.interceptors.response.use(
             }
             catch (refreshError) {
                 processQueue(refreshError as AxiosError, null)
-                // window.location.href = '/login'
+                window.location.href = '/login'
                 console.error("INTERCEPTOR CAUGHT REFRESH ERROR!", refreshError);
                 return Promise.reject(refreshError)
             }

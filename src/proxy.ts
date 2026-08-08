@@ -6,17 +6,18 @@ const publicPaths = ['/login', '/register', '/'];
 
 export function proxy(request: NextRequest) {
     const authCookie = request.cookies.get('Authentication');
+    const refreshCookie = request.cookies.get('Refresh');
     const { pathname } = request.nextUrl;
 
     const isPublicPath = publicPaths.includes(pathname);
 
-    // If the user is NOT authenticated and trying to access a protected route
-    if (!authCookie && !isPublicPath) {
+    // If the user has NEITHER an access token nor a refresh token, redirect to login
+    if (!authCookie && !refreshCookie && !isPublicPath) {
         return NextResponse.redirect(new URL('/login', request.url));
     }
 
-    // If the user IS authenticated and tries to visit login/signup, redirect them to dashboard
-    if (authCookie && (pathname === '/login' || pathname === '/register')) {
+    // If the user is authenticated (or can be refreshed) and visits login/register, redirect to dashboard
+    if ((authCookie || refreshCookie) && (pathname === '/login' || pathname === '/register')) {
         return NextResponse.redirect(new URL('/dashboard', request.url));
     }
 
