@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { LayoutGrid, FileText, BarChart3, History, Settings, LogOut } from 'lucide-react';
@@ -59,6 +60,7 @@ export function Sidebar() {
     const pathname = usePathname();
     const router = useRouter();
     const { data: user } = useUser();
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     async function handleLogout() {
         try {
@@ -73,6 +75,68 @@ export function Sidebar() {
 
     return (
         <>
+            {/* MOBILE TOP NAVBAR */}
+            <div className="md:hidden fixed top-0 left-0 right-0 z-50 h-16 bg-background/80 backdrop-blur-2xl border-b border-white/10 dark:border-white/5 flex items-center justify-between px-4">
+                {/* Logo */}
+                <div className="flex items-center gap-2">
+                    <Logo variant="monogram" size={24} />
+                    <span className="font-display font-bold text-foreground tracking-tight">
+                        Taqyeem<span className="text-primary">.ai</span>
+                    </span>
+                </div>
+                
+                {/* Right Side: Credits & User */}
+                <div className="flex items-center gap-3">
+                    {/* Credits */}
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]">
+                        <Zap size={14} className="fill-[#D4AF37]" />
+                        <span className="text-xs font-bold">{user?.credits ?? '–'}</span>
+                    </div>
+
+                    {/* User Avatar & Dropdown */}
+                    <div className="relative">
+                        <button 
+                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                            className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-semibold ring-1 ring-primary/20 hover:ring-primary/40 transition-all cursor-pointer"
+                        >
+                            {user?.name?.charAt(0)?.toUpperCase() ?? '?'}
+                        </button>
+                        
+                        {/* Dropdown Menu */}
+                        {isMobileMenuOpen && (
+                            <>
+                                {/* Invisible overlay to close dropdown */}
+                                <div 
+                                    className="fixed inset-0 z-40" 
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                />
+                                
+                                <div className="absolute top-full right-0 mt-3 w-48 rounded-2xl bg-background border border-border shadow-xl z-50 overflow-hidden flex flex-col animate-in fade-in slide-in-from-top-2 duration-200">
+                                    <div className="p-3 border-b border-border bg-muted/30">
+                                        <div className="text-sm font-semibold text-foreground truncate">{user?.name ?? 'Loading...'}</div>
+                                        <div className="text-[10px] text-muted-foreground truncate uppercase tracking-wider mt-0.5">{user?.tier ?? 'FREE'} PLAN</div>
+                                    </div>
+                                    
+                                    <div className="p-1.5 flex flex-col gap-1">
+                                        <div className="w-full text-foreground/70 hover:bg-muted hover:text-accent-foreground rounded-xl flex items-center h-10 overflow-hidden transition-colors">
+                                            <ThemeToggle isExpanded={true} textClassName="text-xs font-medium opacity-100 translate-x-0 !pl-0" className="w-full" />
+                                        </div>
+                                        
+                                        <button 
+                                            onClick={handleLogout}
+                                            className="flex items-center w-full h-10 px-3 text-destructive hover:bg-destructive/10 rounded-xl transition-colors text-left"
+                                        >
+                                            <LogOut size={16} strokeWidth={2} className="mr-3" />
+                                            <span className="text-xs font-medium">Log out</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </>
+                        )}
+                    </div>
+                </div>
+            </div>
+
             {/* DESKTOP SIDEBAR */}
             <aside className={cn(
                 "group/sidebar hidden md:flex shrink-0 h-[calc(100vh-32px)] sticky top-4 ml-4",
