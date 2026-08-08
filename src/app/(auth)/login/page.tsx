@@ -22,7 +22,10 @@ export default function LoginPage() {
         setError('');
 
         try {
-            const response = await api.post('/auth/login', { email, password });
+            const response = await api.post('/auth/login', { 
+                email: email.trim(), 
+                password 
+            });
             router.push('/dashboard');
             router.refresh();
         } catch (err: any) {

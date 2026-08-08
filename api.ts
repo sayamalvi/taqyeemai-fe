@@ -40,9 +40,17 @@ api.interceptors.response.use(
         }
 
         if (error.response?.status === 401 && !originalRequest._retry) {
-            if (originalRequest.url === '/auth/refresh') {
-                window.location.href = '/login'
-                return Promise.reject()
+            const url = originalRequest.url || '';
+            if (
+                url.includes('/auth/refresh') || 
+                url.includes('/auth/login') || 
+                url.includes('/auth/register')
+            ) {
+                if (url.includes('/auth/refresh')) {
+                    // window.location.href = '/login';
+                    console.error("INTERCEPTOR CAUGHT REFRESH ERROR!", error);
+                }
+                return Promise.reject(error);
             }
             originalRequest._retry = true;
 
@@ -65,7 +73,8 @@ api.interceptors.response.use(
             }
             catch (refreshError) {
                 processQueue(refreshError as AxiosError, null)
-                window.location.href = '/login'
+                // window.location.href = '/login'
+                console.error("INTERCEPTOR CAUGHT REFRESH ERROR!", refreshError);
                 return Promise.reject(refreshError)
             }
             finally {
