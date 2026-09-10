@@ -37,7 +37,7 @@ export default function ResumesDashboard() {
     // Calculate Stats
     const totalResumes = resumes?.length || 0;
     const totalVersions = resumes?.reduce((acc: number, r: any) => acc + (r.versions?.length || 1), 0) || 0;
-    const scores = resumes?.map((r: any) => r.versions?.[0]?.analysis?.atsScore).filter((s: any) => typeof s === 'number') || [];
+    const scores = resumes?.map((r: any) => r.versions?.[0]?.analysis?.resumeHealthScore).filter((s: any) => typeof s === 'number') || [];
     const avgScore = scores.length > 0 ? Math.round(scores.reduce((a: number, b: number) => a + b, 0) / scores.length) : null;
 
     return (
@@ -153,7 +153,7 @@ export default function ResumesDashboard() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {!isLoading && resumes?.map((r: any) => {
                                 const latestVersion = r.versions?.[0];
-                                const latestScore = latestVersion?.analysis?.atsScore;
+                                const latestScore = latestVersion?.analysis?.resumeHealthScore;
 
                                 return (
                                     <div
